@@ -1,0 +1,30 @@
+import json
+
+# Crear el diccionario de tokens
+tokens = {
+    "{": 10,
+    "[ENTER]": 13,
+    "\"": 14,
+    "n": 15,
+    "o": 15,
+    "m": 15,
+    "b": 15,
+    "r": 15,
+    "e": 15,
+    "[ESPACIO]": 16,
+    "\"": 14,
+    ":": 22,
+    "\"": 14,
+}
+
+# Escribir el diccionario en un archivo JSON
+with open('tokens.json', 'w') as file:
+    json.dump(tokens, file)
+
+# Leer el archivo JSON
+with open('tokens.json', 'r') as archivo:
+    contenido = archivo.read()
+    if contenido:
+        datos = json.loads(contenido)
+        for key, value in datos.items():
+            print(f"{value} := {key}")
