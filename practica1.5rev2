@@ -7,6 +7,22 @@ def _convertir_caracter(caracter):
         caracter = unicodedata.normalize('NFKD', caracter).encode('ASCII', 'ignore').decode('ASCII')
     return ord(caracter)
 
+# Resto del código...
+# Definir función para convertir caracteres especiales en valores Unicode
+def _convertir_caracter(caracter):
+    if caracter == '\0':
+        return 0
+    elif caracter == '\n':
+        return 32
+    elif caracter == '""':
+        return 34
+    elif caracter == '{':
+        return 123
+    elif caracter == '}':
+        return 125
+    else:
+        return ord(caracter)
+
 # Leer archivo JSON original
 with open('ejemplo.json', 'r', encoding='utf-8') as file:
     data = json.load(file)
@@ -21,8 +37,17 @@ with open('abecedario_unicode.txt', 'r', encoding='utf-8') as file:
             if len(partes) == 2:
                 unicode_valores[partes[0]] = _convertir_caracter(partes[1])
 
+    # Agregar valores especiales
+    unicode_valores.update({
+        '{': 123,
+        '}': 125,
+        '': 34,
+        '\n': 32,
+        '\0': 0
+    })
+
     # Asignar valores Unicode a cada carácter en el archivo JSON original
-    nuevo_dict = {k: [_convertir_caracter(char) for char in v] for k, v in data.items() if isinstance(v, str)}
+    nuevo_dict = {k: [unicode_valores.get(char, ord(char)) for char in v] for k, v in data.items() if isinstance(v, str)}
 
 # Escribir archivo JSON nuevo
 with open('token_final.json', 'w', encoding='utf-8') as file:
